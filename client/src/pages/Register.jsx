@@ -15,7 +15,6 @@ const initialState = {
 function Register() {
   const { isLoading, showAlert } = useAppContext();
 
-  console.log(state);
   const [values, setValues] = useState(initialState);
 
   // global state and useNavigate
