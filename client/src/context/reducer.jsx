@@ -1,4 +1,4 @@
-import { DISPLAY_ALERT } from "./actions";
+import { CLEAR_ALERT, DISPLAY_ALERT } from "./actions";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -10,6 +10,13 @@ const reducer = (state, action) => {
         alertText: "Please provide all values",
       };
 
+    case CLEAR_ALERT:
+      return {
+        ...state,
+        showAlert: false,
+        alertType: "",
+        alertText: "",
+      };
     default:
       return state;
   }
