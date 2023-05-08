@@ -13,7 +13,7 @@ const initialState = {
 };
 
 function Register() {
-  const { isLoading, showAlert } = useAppContext();
+  const { isLoading, showAlert, displayAlert } = useAppContext();
 
   const [values, setValues] = useState(initialState);
 
@@ -24,12 +24,23 @@ function Register() {
   };
 
   const handleChange = (e) => {
-    console.log(e.target);
+    setValues({
+      ...values,
+      [e.target.name]: e.target.value,
+    });
+
+    console.log(values);
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
 
+    const { name, email, password, isMember } = values;
+
+    if (!email || !password) {
+      displayAlert();
+      return;
+    }
     console.log(e.target);
   };
   return (
@@ -37,7 +48,7 @@ function Register() {
       <form className="form" onSubmit={onSubmit}>
         <Logo />
         <h3>{values.isMember ? "Login" : "Register"}</h3>
-        {values.showAlert && <Alert />}
+        {showAlert && <Alert />}
         {!values.isMember && (
           <FormRow
             type={"text"}
