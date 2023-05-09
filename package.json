@@ -1,0 +1,17 @@
+{
+  "name": "Jobify",
+  "version": "1.0.0",
+  "description": "- create 'client folder\r - open terminal\r - cd client\r - npm create vite@latest\r - set editor/browser side by side\r - copy / paste assets from complete project",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  }
+}
