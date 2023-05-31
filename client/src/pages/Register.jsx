@@ -3,6 +3,7 @@ import { FormRow, Logo } from "../components";
 import Wrapper from "../assets/wrappers/RegisterPage";
 import Alert from "../components/Alert";
 import { useAppContext } from "../context/appContext";
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
   name: "",
@@ -13,7 +14,9 @@ const initialState = {
 };
 
 function Register() {
-  const { isLoading, showAlert, displayAlert } = useAppContext();
+  const navigate = useNavigate();
+  const { user, isLoading, showAlert, displayAlert, registerUser, loginUser } =
+    useAppContext();
 
   const [values, setValues] = useState(initialState);
 
@@ -41,8 +44,24 @@ function Register() {
       displayAlert();
       return;
     }
-    console.log(e.target);
+
+    const currentUser = { name, email, password };
+    console.log(currentUser);
+
+    if (isMember) {
+      loginUser(currentUser);
+    } else {
+      registerUser(currentUser);
+    }
   };
+
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
+    }
+  }, [user, navigate]);
   return (
     <Wrapper className="full-page">
       <form className="form" onSubmit={onSubmit}>
@@ -69,7 +88,7 @@ function Register() {
           value={values.password}
           handleChange={handleChange}
         />
-        <button type="submit" className="btn btn-block">
+        <button type="submit" className="btn btn-block" disabled={isLoading}>
           Submit
         </button>
 
