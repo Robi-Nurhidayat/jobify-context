@@ -1,4 +1,6 @@
+// import cors from "cors";
 import "express-async-errors";
+import morgan from "morgan";
 import express from "express";
 
 const app = express();
@@ -16,10 +18,20 @@ import jobsRouter from "./routes/jobsRoutes.js";
 import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddlerware from "./middleware/error-handler.js";
 
+// app.use(cors());
+
+if (process.env.NODE !== "production") {
+  app.use(morgan("dev"));
+}
 app.use(express.json());
 
+console.log("test");
+
 app.get("/", (req, res) => {
-  res.send("Welcome");
+  res.json({ msg: "Welcome" });
+});
+app.get("/api/v1", (req, res) => {
+  res.json({ msg: "Api" });
 });
 
 app.use("/api/v1/auth", authRouter);
