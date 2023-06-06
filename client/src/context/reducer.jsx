@@ -9,6 +9,9 @@ import {
   LOGIN_USER_ERROR,
   TOGGLE_SIDEBAR,
   LOGOUT_USER,
+  UPDATE_USER_BEGIN,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_ERROR,
 } from "./actions";
 import { initialState } from "./appContext";
 
@@ -93,6 +96,32 @@ const reducer = (state, action) => {
         token: null,
         userLocation: "",
         jobLocation: "",
+      };
+
+    case UPDATE_USER_BEGIN:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case UPDATE_USER_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        token: action.payload.token,
+        user: action.payload.user,
+        userLocation: action.payload.location,
+        jobLocation: action.payload.location,
+        showAlert: true,
+        alertText: "User Profile Updated",
+        alertType: "success",
+      };
+    case UPDATE_USER_ERROR:
+      return {
+        ...state,
+        isLoading: false,
+        alertText: action.payload.msg,
+        alertType: "danger",
+        showAlert: true,
       };
     default:
       return state;
