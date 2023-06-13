@@ -1,9 +1,10 @@
-import { FormRow, Alert } from "../../components";
+import { FormRow, Alert, FormRowSelect } from "../../components";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useAppContext } from "../../context/appContext";
 
 function AddJob() {
   const {
+    isLoading,
     isEditing,
     showAlert,
     displayAlert,
@@ -14,13 +15,16 @@ function AddJob() {
     jobTypeOptions,
     status,
     statusOptions,
+    handleChange,
+    clearValues,
+    createJob,
   } = useAppContext();
 
   const handleJobInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
 
-    console.log(`${name}: ${value}`);
+    handleChange({ name, value });
   };
 
   const handleSubmit = (e) => {
@@ -30,6 +34,13 @@ function AddJob() {
       displayAlert();
       return;
     }
+
+    if (isEditing) {
+      // khhusus edit job
+      return;
+    }
+
+    createJob();
   };
   return (
     <Wrapper>
@@ -64,15 +75,41 @@ function AddJob() {
           />
 
           {/* job type */}
+
+          <FormRowSelect
+            name={"status"}
+            value={status}
+            handleChange={handleJobInput}
+            list={statusOptions}
+          />
           {/* job status */}
 
+          <FormRowSelect
+            name={"jobType"}
+            labelText={"type"}
+            value={jobType}
+            handleChange={handleJobInput}
+            list={jobTypeOptions}
+          />
+
+          {/* btn container */}
           <div className="btn-container">
             <button
               type="submit"
               className="btn btn-block submit-btn"
               onClick={handleSubmit}
+              disabled={isLoading}
             >
               Submit
+            </button>
+            <button
+              className="btn btn-block clear-btn"
+              onClick={(e) => {
+                e.preventDefault();
+                clearValues();
+              }}
+            >
+              clear
             </button>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { useState, useReducer, useContext, createContext } from "react";
+import { useReducer, useContext, createContext } from "react";
 import reducer from "./reducer";
 import axios from "axios";
 import {
@@ -15,8 +15,12 @@ import {
   UPDATE_USER_BEGIN,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
+  HANDLE_CHANGE,
+  CLEAR_VALUES,
+  CREATE_JOB_BEGIN,
+  CREATE_JOB_SUCCESS,
+  CREATE_JOB_ERROR,
 } from "./actions";
-import { config } from "dotenv";
 
 const token = localStorage.getItem("token");
 const user = localStorage.getItem("user");
@@ -135,8 +139,8 @@ const AppProvider = ({ children }) => {
         type: REGISTER_USER_ERROR,
         payload: { msg: error.response.msg },
       });
-      clearAlert();
     }
+    clearAlert();
   };
 
   const loginUser = async (currentUser) => {
@@ -158,8 +162,8 @@ const AppProvider = ({ children }) => {
         type: LOGIN_USER_ERROR,
         payload: { msg: error.response.msg },
       });
-      clearAlert();
     }
+    clearAlert();
   };
 
   const toggleSidebar = () => {
@@ -194,6 +198,46 @@ const AppProvider = ({ children }) => {
 
     clearAlert();
   };
+
+  const handleChange = ({ name, value }) => {
+    dispatch({
+      type: HANDLE_CHANGE,
+      payload: { name, value },
+    });
+  };
+
+  const clearValues = () => {
+    dispatch({ type: CLEAR_VALUES });
+  };
+
+  const createJob = async () => {
+    dispatch({ type: CREATE_JOB_BEGIN });
+
+    try {
+      const { position, company, jobLocation, jobType, status } = state;
+
+      await authFetch.post("/auth/jobs", {
+        position,
+        company,
+        jobLocation,
+        jobType,
+        status,
+      });
+
+      dispatch({ type: CREATE_JOB_SUCCESS });
+
+      dispatch({ type: CLEAR_VALUES });
+    } catch (error) {
+      if (error.response.status === 401) return;
+
+      dispatch({
+        type: CREATE_JOB_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+
+    clearAlert();
+  };
   return (
     <AppContext.Provider
       value={{
@@ -205,6 +249,9 @@ const AppProvider = ({ children }) => {
         toggleSidebar,
         logoutUser,
         updateUser,
+        handleChange,
+        clearValues,
+        createJob,
       }}
     >
       {children}
