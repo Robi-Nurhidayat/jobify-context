@@ -5,11 +5,10 @@ import {
   NotFoundError,
   UnAuthenticated,
 } from "../errors/index.js";
+import checkPermission from "../utils/checkPermission.js";
 
 const createJob = async (req, res) => {
   const { position, company } = req.body;
-
-  console.log(req);
 
   if (!position || !company) {
     throw new BadRequestError("Please provide all values");
@@ -40,6 +39,9 @@ const updateJob = async (req, res) => {
   if (!job) {
     throw new NotFoundError(`No job with id: ${id}`);
   }
+
+  checkPermission(req.user, job.createdBy);
+
   const result = await Job.findByIdAndUpdate(
     id,
     { position, company },
@@ -50,7 +52,18 @@ const updateJob = async (req, res) => {
 };
 
 const deleteJob = async (req, res) => {
-  res.send("delete job");
+  const id = req.params.id;
+
+  const job = await Job.findOne({ _id: id });
+  if (!job) {
+    throw new NotFoundError("job tidak ditemukan");
+  }
+
+  checkPermission(req.user, job.createdBy);
+
+  await Job.findByIdAndDelete(id);
+
+  res.status(StatusCodes.OK).json({ msg: "Success, Job removed" });
 };
 const showStats = async (req, res) => {
   res.send("show job");
