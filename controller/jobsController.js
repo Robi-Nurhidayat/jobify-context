@@ -1,6 +1,10 @@
 import Job from "../models/Job.js";
 import { StatusCodes } from "http-status-codes";
-import { BadRequestError, UnAuthenticated } from "../errors/index.js";
+import {
+  BadRequestError,
+  NotFoundError,
+  UnAuthenticated,
+} from "../errors/index.js";
 
 const createJob = async (req, res) => {
   const { position, company } = req.body;
@@ -18,11 +22,33 @@ const createJob = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ job });
 };
 const getAllJob = async (req, res) => {
-  res.send("get all job");
+  const jobs = await Job.find({ createdBy: req.user.userId });
+  res
+    .status(StatusCodes.OK)
+    .json({ jobs, totalJobs: jobs.length, numOfPages: 1 });
 };
 const updateJob = async (req, res) => {
-  res.send("update job");
+  const id = req.params.id;
+
+  const { position, company } = req.body;
+
+  if (!position || !company) {
+    throw new BadRequestError("Please provide all values");
+  }
+
+  const job = await Job.findOne({ _id: id });
+  if (!job) {
+    throw new NotFoundError(`No job with id: ${id}`);
+  }
+  const result = await Job.findByIdAndUpdate(
+    id,
+    { position, company },
+    { new: true }
+  );
+
+  res.status(StatusCodes.OK).json({ result });
 };
+
 const deleteJob = async (req, res) => {
   res.send("delete job");
 };

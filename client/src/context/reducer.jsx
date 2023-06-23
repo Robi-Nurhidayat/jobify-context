@@ -17,6 +17,9 @@ import {
   CREATE_JOB_BEGIN,
   CREATE_JOB_SUCCESS,
   CREATE_JOB_ERROR,
+  GET_JOB_BEGIN,
+  GET_JOB_SUCCESS,
+  SET_EDIT_JOB,
 } from "./actions";
 
 const reducer = (state, action) => {
@@ -172,6 +175,36 @@ const reducer = (state, action) => {
         showAlert: true,
         alertType: "danger",
         alertText: action.payload.msg,
+      };
+    case GET_JOB_BEGIN:
+      return {
+        ...state,
+        isLoading: true,
+        showAlert: false,
+      };
+    case GET_JOB_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        jobs: action.payload.jobs,
+        totalJobs: action.payload.totalJobs,
+        numOfPages: action.payload.numOfPages,
+      };
+
+    case SET_EDIT_JOB:
+      const job = state.jobs.find((job) => job._id === action.payload.id);
+
+      const { _id, position, company, jobLocation, jobType, status } = job;
+
+      return {
+        ...state,
+        isEditing: true,
+        editJobId: _id,
+        position,
+        company,
+        jobLocation,
+        jobType,
+        status,
       };
     default:
       return state;

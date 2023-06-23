@@ -18,6 +18,7 @@ function AddJob() {
     handleChange,
     clearValues,
     createJob,
+    editJob,
   } = useAppContext();
 
   const handleJobInput = (e) => {
@@ -36,7 +37,7 @@ function AddJob() {
     }
 
     if (isEditing) {
-      // khhusus edit job
+      editJob();
       return;
     }
 
