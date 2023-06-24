@@ -20,6 +20,10 @@ import {
   GET_JOB_BEGIN,
   GET_JOB_SUCCESS,
   SET_EDIT_JOB,
+  DELETE_JOB_BEGIN,
+  EDIT_JOB_BEGIN,
+  EDIT_JOB_SUCCESS,
+  EDIT_JOB_ERROR,
 } from "./actions";
 
 const reducer = (state, action) => {
@@ -205,6 +209,32 @@ const reducer = (state, action) => {
         jobLocation,
         jobType,
         status,
+      };
+    case DELETE_JOB_BEGIN:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case EDIT_JOB_BEGIN:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case EDIT_JOB_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        showAlert: true,
+        alertType: "success",
+        alertText: "Job Updated !",
+      };
+    case EDIT_JOB_ERROR:
+      return {
+        ...state,
+        isLoading: false,
+        showAlert: true,
+        alertType: "danger",
+        alertText: action.payload.msg,
       };
     default:
       return state;
