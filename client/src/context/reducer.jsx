@@ -24,6 +24,8 @@ import {
   EDIT_JOB_BEGIN,
   EDIT_JOB_SUCCESS,
   EDIT_JOB_ERROR,
+  SHOW_STATS_BEGIN,
+  SHOW_STATS_SUCCESS,
 } from "./actions";
 
 const reducer = (state, action) => {
@@ -236,6 +238,22 @@ const reducer = (state, action) => {
         alertType: "danger",
         alertText: action.payload.msg,
       };
+
+    case SHOW_STATS_BEGIN:
+      return {
+        ...state,
+        isLoading: true,
+        showAlert: false,
+      };
+
+    case SHOW_STATS_SUCCESS: {
+      return {
+        ...state,
+        isLoading: false,
+        stats: action.payload.stats,
+        monthly: action.payload.monthly,
+      };
+    }
     default:
       return state;
   }
