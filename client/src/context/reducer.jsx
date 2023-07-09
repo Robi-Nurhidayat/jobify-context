@@ -27,6 +27,7 @@ import {
   SHOW_STATS_BEGIN,
   SHOW_STATS_SUCCESS,
   CLEAR_FILTERS,
+  CHANGE_PAGE,
 } from "./actions";
 
 const reducer = (state, action) => {
@@ -141,6 +142,7 @@ const reducer = (state, action) => {
     case HANDLE_CHANGE:
       return {
         ...state,
+        page: 1,
         [action.payload.name]: action.payload.value,
       };
 
@@ -263,6 +265,11 @@ const reducer = (state, action) => {
         searchStatus: "all",
         searchType: "all",
         sort: "latest",
+      };
+    case CHANGE_PAGE:
+      return {
+        ...state,
+        page: action.payload.page,
       };
     default:
       return state;
